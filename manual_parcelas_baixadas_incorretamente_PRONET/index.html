@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Procedimento para cancelamento e exclusão de parcelas baixadas incorretamente no PRONET</title>
+
+  <!-- Bootstrap CSS (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Import map placeholder for esm.sh usage (no external JS libraries required) -->
+  <script type="importmap">
+  {
+    "imports": {}
+  }
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light d-flex align-items-stretch">
+
+  <div id="app" class="container-fluid vh-100 d-flex flex-column p-0">
+    <!-- Header / quick controls -->
+    <header class="d-flex align-items-center justify-content-between px-3 py-2 bg-white border-bottom">
+      <div class="d-flex align-items-center gap-2">
+        <img src="/manual_parcelas_baixadas_incorretamente_PRONET/stillos-logo.png" alt="STILLOS" class="brand-logo" />
+        <button id="prevStep" class="btn btn-outline-primary btn-sm" title="Passo anterior" aria-label="Passo anterior">‹</button>
+        <button id="nextStep" class="btn btn-outline-primary btn-sm" title="Próximo passo" aria-label="Próximo passo">›</button>
+        <div class="ms-2">
+          <strong id="stepBadge" class="text-muted small">Passo 1 / 13</strong>
+        </div>
+      </div>
+
+      <div class="text-center flex-grow-1 px-2">
+        <div class="d-block">
+          <h6 class="mb-0 small fw-semibold">Procedimento para cancelamento e exclusão de parcelas baixadas incorretamente no PRONET</h6>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <input id="searchInput" class="form-control form-control-sm" style="min-width:160px" placeholder="Pesquisar passo..." aria-label="Pesquisar passo">
+        <div class="form-check form-switch ms-2">
+          <input class="form-check-input" type="checkbox" id="focusChecklist" checked>
+          <label class="form-check-label small" for="focusChecklist">Mostrar checklist</label>
+        </div>
+      </div>
+      <a href="../index.html" class="btn btn-sm btn-outline-primary ms-auto">Voltar ao início</a>
+    </header>
+
+    <!-- Main content: steps + checklist -->
+    <main class="flex-grow-1 d-flex" style="min-height:0;">
+
+      <!-- Steps column -->
+      <section id="stepsCol" class="bg-white border-end overflow-auto p-3" style="width:66%; min-width:320px;">
+     
+        <div id="stepsContainer" class="accordion" >
+          <!-- JS will populate steps here -->
+        </div>
+      </section>
+
+      <!-- Checklist / summary column -->
+      <aside id="sideCol" class="bg-light p-3 d-flex flex-column" style="width:34%; min-width:260px; max-width:420px;">
+        <div class="mb-2">
+          <h6 class="mb-1">Checklist (Ações críticas)</h6>
+          <p class="small text-muted mb-0">Marque conforme avança. Itens obrigatórios aparecem em vermelho.</p>
+        </div>
+
+        <div id="checklist" class="list-group mb-3 overflow-auto" style="min-height:0;">
+          <!-- checklist items populated by JS -->
+        </div>
+
+        <div class="mt-auto">
+          <div class="d-grid gap-2">
+            <button id="restorePeriodBtn" class="btn btn-warning btn-sm">Restaurar período financeiro</button>
+            <button id="completeBtn" class="btn btn-success btn-sm">Concluir e validar</button>
+          </div>
+          <p id="statusMsg" class="small text-muted mt-2 mb-0"></p>
+        </div>
+      </aside>
+
+    </main>
+
+    <!-- Footer / quick tips -->
+    <footer class="bg-white border-top py-2 px-3 small text-muted">
+      <div class="d-flex justify-content-between">
+        <div></div>
+        <div id="tipText">
+          <div style="text-align: center;" class="container text-center small text-muted">
+            Documentação interna - Sistemas Stillos - By Beltis tecnologia 2026 © ADS Beltis 2026
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal: Confirm critical action -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p id="confirmText" class="mb-3">Confirma?</p>
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+            <button id="confirmOk" type="button" class="btn btn-primary btn-sm">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+
+  <!-- Bootstrap JS (bundle) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

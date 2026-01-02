@@ -1,0 +1,69 @@
+/* =========================
+   Geral
+========================= */
+body{
+  font-family: Inter, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:#1b1b1b;
+}
+
+/* =========================
+   Header badge
+========================= */
+.badge-manual{
+  background: linear-gradient(180deg,#ff2a84,#e02174);
+  color:#fff;
+  padding:.35rem .6rem;
+  border-radius:.4rem;
+  font-weight:700;
+  font-size:.95rem;
+  box-shadow:0 4px 12px rgba(255,42,132,0.18);
+}
+
+/* =========================
+   Accordion
+========================= */
+.accordion-button{
+  font-weight:600;
+  color:#1b1b1b;
+}
+
+.accordion-button:not(.collapsed){
+  background:#fbfbfb;
+}
+
+.accordion-body{
+  font-size:.95rem;
+  line-height:1.35;
+  color:#1b1b1b;
+}
+
+/* =========================
+   Utilities
+========================= */
+.tools{
+  margin-top:.5rem;
+}
+
+#previewUpdate{
+  white-space:pre-wrap;
+  word-break:break-word;
+  max-height:10rem;
+  overflow:auto;
+  color:#6c757d;
+}
+
+#mainArea{
+  padding-right:.25rem;
+  padding-left:.25rem;
+}
+
+/* =========================
+   Touch-friendly buttons
+========================= */
+button.btn{
+  min-height:44px;
+  min-width:44px;
+  padding:.375rem .6rem;
+  font-weight:600;
+}

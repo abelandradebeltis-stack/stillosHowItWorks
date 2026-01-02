@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard Glpi Stillos</title>
+
+  <link rel="stylesheet" href="./style.css" />
+
+  <!-- Import map for esm.sh modules -->
+  <script type="importmap">
+  {
+    "imports": {
+      "papaparse": "https://esm.sh/papaparse@5.4.1",
+      "chart.js": "https://esm.sh/chart.js@4.4.0",
+      "chart.js/auto": "https://esm.sh/chart.js@4.4.0/auto",
+      "chartjs-adapter-date-fns": "https://esm.sh/chartjs-adapter-date-fns@3.0.0"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <div class="logo-title">
+        <img src="../stillos-logo.png" alt="STILLOS" class="logo" />
+        <div class="title-block">
+          <h1 class="title">Dashboard Glpi Stillos</h1>
+          <h5 class="subtitle">Análises interativas de chamados</h5>
+        </div>
+      </div>
+      <a href="../index.html" class="btn">Voltar ao início</a>
+      <div class="controls">
+        <label class="control">
+          Período
+          <input id="dateFrom" type="date" />
+          -
+          <input id="dateTo" type="date" />
+        </label>
+        <label class="control">
+          Filtro: Tipo
+          <select id="filterField">
+            <option value="">(Nenhum)</option>
+          </select>
+        </label>
+        <label class="control">
+          Valor
+          <select id="filterValue">
+            <option value="">(Todos)</option>
+          </select>
+        </label>
+        <label class="control">
+          <input id="splitByTitle" type="checkbox" />
+          Separar por título
+        </label>
+        <button id="resetBtn" class="btn">Redefinir</button>
+        <button id="openTitlesBtn" class="btn" title="Abrir chamados por título">Chamados por título</button>
+        <button id="openFieldsBtn" class="btn" title="Abrir gráficos por coluna">Gráficos por coluna</button>
+
+        <!-- CSV upload: replace dataset on file selection -->
+        <label class="control" title="Substituir dados via CSV">
+          Importar CSV
+          <input id="csvUpload" type="file" accept=".csv,text/csv" />
+        </label>
+
+        <button id="openHelpBtn" class="btn help" title="Ajuda rápida">?</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="panels">
+        <div class="panel card">
+          <div class="panel-title">Resumo</div>
+          <div id="summary" class="panel-body summary-grid">
+            <!-- estatísticas rápidas -->
+          </div>
+        </div>
+
+
+
+        <div class="panel card">
+          <div class="panel-title">Distribuição por categoria</div>
+          <div class="panel-body">
+            <canvas id="pieChart" height="160"></canvas>
+          </div>
+        </div>
+
+        <div class="panel card">
+          <div class="panel-title">Top 10 — Valores / Contagens</div>
+          <div class="panel-body">
+            <canvas id="barChart" height="160"></canvas>
+          </div>
+        </div>
+
+
+
+
+
+        <!-- Modal overlay / content (reused for list and item details) -->
+        <div id="modalOverlay" class="modal-overlay" hidden>
+          <div id="modalContent" class="modal-content" role="dialog" aria-modal="true">
+            <button id="modalClose" class="modal-close" aria-label="Fechar">✕</button>
+            <div id="modalBody"></div>
+          </div>
+        </div>
+
+        <div class="panel card full">
+          <div class="panel-title">Total de chamados</div>
+          <div class="panel-body">
+            <div id="tableWrap" class="table-wrap"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <small>Carregando dados de /glpi.csv — Última atualização: <span id="lastUpdate">--</span></small>
+      Documentação interna - Sistemas Stillos - By Beltis tecnologia 2025 © ADS Beltis 2025
+    </footer>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

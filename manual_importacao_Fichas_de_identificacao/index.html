@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Manual Interativo — Importação - Fichas de Identificação (Referência Doc Word)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-light">
+
+  <div class="container py-4">
+    <header class="d-flex align-items-center mb-4">
+      <div class="me-3">
+        <img src="stillos-logo.png" alt="STILLOS logo" class="brand-logo" />
+      </div>
+      <div>
+        <h1 class="h4 mb-0">Manual interativo — Importação - Fichas de identificação (Ref. Doc Word)</h1>
+        <small class="text-muted">Procedimentos passo a passo com recursos interativos</small>
+      </div>
+      <a href="../index.html" class="btn btn-sm btn-outline-primary ms-auto">Voltar ao início</a>
+    </header>
+
+    <div class="row g-3">
+      <div class="col-12 col-lg-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h2 class="h6">Seções</h2>
+            <div class="list-group mb-3">
+              <button class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modal-import">Importação dos formulários</button>
+              <button class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modal-ssisdest">Exportar via SSIS (TAB_FICHAS_DE_IDENTIFICACAO_CARGA)</button>
+              <button class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modal-views">Execução das consultas por formulário</button>
+              <button class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modal-importfinal">Importar para TAB_FICHAS_IDENTIFICACAO</button>
+              <button class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#modal-photos">Download e tratamento de fotos</button>
+            </div>
+
+            <h3 class="h6">Checklist rápido</h3>
+            <ul class="list-unstyled small mb-0" id="quick-checklist">
+              <li>1. Confirmar acesso ao Google Drive com conta correta</li>
+              <li>2. Baixar respostas em TSV e renomear para DADOS.TSV</li>
+              <li>3. Salvar DADOS.TSV na pasta correspondente</li>
+              <li>4. Abrir IdCarga.xlsx e salvar cópia (configurar colunas como texto)</li>
+              <li>5. Exportar via SSIS para [TAB_FICHAS_DE_IDENTIFICACAO_CARGA]</li>
+              <li>6. Executar view apropriada e salvar XLSX</li>
+              <li>7. Exportar XLSX para TAB_FICHAS_IDENTIFICACAO via SSIS</li>
+              <li>8. Baixar fotos, converter, redimensionar e imprimir fichas</li>
+            </ul>
+          </div>
+          <div class="card-footer d-flex gap-2">
+            <button class="btn btn-primary" id="btn-print-checklist">Imprimir checklist</button>
+            <button class="btn btn-outline-secondary" id="btn-download-todo">Baixar passo a passo (TXT)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <div class="card shadow-sm sticky-card">
+          <div class="card-body">
+            <h3 class="h6">Ações rápidas</h3>
+            <div class="d-grid gap-2">
+              <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-import">Começar: Importação</button>
+              <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-photos">Fotos</button>
+              <button class="btn btn-warning" id="show-shortcuts">Atalhos e dicas</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-3">
+          <div class="card-body small text-muted">
+            Dica: use contas com permissões nos formulários e mantenha backup dos arquivos IdCarga.xlsx antes de qualquer operação.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+
+  <!-- Importação do Formulário -->
+  <div class="modal fade" id="modal-import" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Importação dos formulários — Passo a passo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ol>
+            <li>Acesse o Google Drive com a conta que tem acesso aos formulários.</li>
+            <li>Abra Formulários e selecione o formulário de identificação correto:
+              <ul>
+                <li>Identificação Geral</li>
+                <li>Mackenzie</li>
+                <li>Five Formaturas (Five)</li>
+              </ul>
+            </li>
+            <li>Visualize as respostas em modo planilha (Abrir no Planilhas Google → "Arquivo" → "Fazer download" → "TSV").</li>
+            <li>Faça download em formato TSV e renomeie o arquivo para DADOS.TSV.</li>
+            <li>Salve DADOS.TSV na pasta correta:
+              <ul>
+                <li>Identificação Geral: h:\\bd\\IdGeral</li>
+                <li>Mackenzie: h:\\bd\\IdGeralMackenzie</li>
+                <li>Five: h:\\bd\\IdFive</li>
+              </ul>
+            </li>
+            <li>Abra a planilha IdCarga.xlsx (cada pasta tem seu IdCarga.xlsx). Essa planilha consome DADOS.TSV.</li>
+            <li>Por segurança, salve IdCarga.xlsx com outro nome (ex.: carga.xlsx). Antes configure todas as colunas como texto (telefone em especial).</li>
+          </ol>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button class="btn btn-primary" id="go-ssis-1" data-bs-target="#modal-ssisdest" data-bs-toggle="modal">Próximo: Exportar via SSIS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SSIS export to temp table -->
+  <div class="modal fade" id="modal-ssisdest" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Exportar via SSIS — Criando TAB_FICHAS_DE_IDENTIFICACAO_CARGA</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ol>
+            <li>Abra SQL Server Integration Services (SSIS).</li>
+            <li>Crie um pacote que leia carga.xlsx (origem Excel 2016) e escreva em [TAB_FICHAS_DE_IDENTIFICACAO_CARGA] (destino: Microsoft OLE DB Provider for SQL Server).</li>
+            <li>Conecte ao servidor 2003SRV usando autenticação SQL (credenciais necessárias).</li>
+            <li>Marque a opção "Excluir linhas na tabela de destino" antes do carregamento.</li>
+            <li>Execute o pacote e confirme que os dados foram carregados na tabela temporária.</li>
+            <li>Atualize as tabelas da Pronet (TBL_*) no banco de dados site conforme necessário.</li>
+          </ol>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+          <button class="btn btn-primary" id="go-views" data-bs-target="#modal-views" data-bs-toggle="modal">Próximo: Executar consultas</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Views per form -->
+  <div class="modal fade" id="modal-views" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Execução das consultas por formulário</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Execute a view correspondente para extrair apenas os novos formandos. Salve o resultado em uma planilha XLSX — esse arquivo será usado no próximo passo.</p>
+          <div class="accordion" id="viewsAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#view-ig">Identificação Geral</button>
+              </h2>
+              <div id="view-ig" class="accordion-collapse collapse" data-bs-parent="#viewsAccordion">
+                <div class="accordion-body">
+                  Execute: <strong>ESTA VIEW EXPORTA UMA CARGA PARA TAB_FICHAS_IDENTIFICACAO.sql</strong>.
+                  Essa view processa [TAB_FICHAS_DE_IDENTIFICACAO_CARGA] e retorna só os novos formandos.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#view-mack">Mackenzie</button>
+              </h2>
+              <div id="view-mack" class="accordion-collapse collapse" data-bs-parent="#viewsAccordion">
+                <div class="accordion-body">
+                  Execute: <strong>ESTA VIEW EXPORTA DE TAB_FICHAS_IDENTIFICAO_MACKENCZIE PARA TAB_FICHAS_IDENTIFICACAO.sql</strong>.
+                  Atenção ao semestre/ano e selecione o contrato na cláusula WHERE. Salve o resultado em XLSX.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#view-five">Five Formaturas</button>
+              </h2>
+              <div id="view-five" class="accordion-collapse collapse" data-bs-parent="#viewsAccordion">
+                <div class="accordion-body">
+                  Execute: <strong>ESTA VIEW EXPORTA DE TAB_FICHAS_IDENTIFICAO_MACKENCZIE FIVE PARA TAB_FICHAS_IDENTIFICACAO.sql</strong>.
+                  Atenção ao semestre/ano e cláusula WHERE com o contrato. Salve em XLSX.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button class="btn btn-primary" id="go-importfinal" data-bs-target="#modal-importfinal" data-bs-toggle="modal">Próximo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final import to TAB_FICHAS_IDENTIFICACAO -->
+  <div class="modal fade" id="modal-importfinal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Importar para TAB_FICHAS_IDENTIFICACAO</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ol>
+            <li>Utilize SSIS novamente para exportar o XLSX gerado no passo anterior para a tabela <strong>TAB_FICHAS_IDENTIFICACAO</strong>.</li>
+            <li>Faça essa operação da mesma forma que no passo 8 (origem Excel 2016 → destino OLE DB → marque excluir linhas quando necessário).</li>
+            <li>Verifique integridade e execute verificações adicionais nas tabelas Pronet se aplicável.</li>
+          </ol>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button class="btn btn-primary" data-bs-target="#modal-photos" data-bs-toggle="modal">Ir para Fotos</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photos modal -->
+  <div class="modal fade" id="modal-photos" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Download e tratamento das fotos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ol>
+            <li>Com os formandos carregados em TAB_FICHAS_IDENTIFICACAO, é possível iniciar o download das fotos.</li>
+            <li>Execute a consulta <strong>baixa fotos sem nome.sql</strong>, selecionando os contratos desejados na cláusula WHERE. Salve o resultado em XLSX.</li>
+            <li>Converta o XLSX para JSON (ex.: https://www.aconvert.com/document/xlsx-to-json/) e salve como fotos.json na pasta do projeto Node.</li>
+            <li>Pelo console (CMD) acesse a pasta do projeto Node e execute: <code>node .</code> — as fotos começarão a ser baixadas para a subpasta fotos.</li>
+            <li>Após término, entre na pasta fotos e delete arquivos .HEIC (foram convertidos para .jpg).</li>
+            <li>Redimensione as fotos (altura 5 cm, proporção mantida) usando FastStone. Salve em d:\\resize (Crystal Reports acessará essa pasta).</li>
+            <li>Abra o projeto Fichas no Visual Studio 2019, selecione contrato e imprima as fichas em PDF. Salve o PDF no diretório da pessoa responsável pela impressão.</li>
+          </ol>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shortcuts popover modal -->
+  <div class="modal fade" id="modal-shortcuts" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Atalhos e dicas rápidas</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body small">
+          <ul>
+            <li>Faça backups antes de sobrescrever tabelas.</li>
+            <li>Configurar colunas como texto evita perda de zeros em telefones.</li>
+            <li>Se houver problema de login no 2003SRV, confirme autenticação SQL e permissões.</li>
+            <li>Use nomes de arquivo padronizados: DADOS.TSV, carga.xlsx, fotos.json.</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer id="site-footer" class="bg-white border-top py-2">
+    <div class="container text-center small text-muted">
+      Documentação interna - Sistemas Stillos - By Beltis tecnologia 2025 © ADS Beltis 2025
+    </div>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

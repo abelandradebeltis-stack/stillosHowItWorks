@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Manual — Organização de Formulários & Backup</title>
+
+  <!-- Import map for future esm.sh libraries -->
+  <script type="importmap">
+  {
+    "imports": {}
+  }
+  </script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar" style="background-color: none; box-shadow: none;">
+      <div class="brand-row" >
+        <img src="stillos-logo.png" alt="STILLOS logo"  class="logo" />
+        <div class="brand"><h3>Manual: Formulários Google & Backup</h3></div>
+      </div>
+      <div class="controls">
+        <input id="search" type="search" placeholder="Pesquisar seção ou termo…" aria-label="Pesquisar" />
+        <select id="viewSelect" aria-label="Selecionar público">
+          <option value="technical">Manual Técnico</option>
+          <option value="operational">Manual Operacional</option>
+          <option value="training">Manual de Treinamento</option>
+        </select>
+    <button><a style="text-decoration: none; color: black;" href="../index.html">Voltar ao início</a></button>
+      </div>
+    </header>
+
+    <main class="content" id="content" role="main" tabindex="0">
+      <!-- dynamic content injected by app.js -->
+    </main>
+
+    <nav class="sidebar" id="sidebar" aria-label="Navegação do manual">
+      <ul id="toc"></ul>
+    </nav>
+    
+    <footer class="footer">
+      <p>Documentação interna - Sistemas Stillos - By Beltis tecnologia 2026 © ADS Beltis 2026</p>
+    </footer>
+    
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

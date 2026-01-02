@@ -1,0 +1,99 @@
+/* Global sizing optimized for one-screen mobile experience */
+:root{
+  --gap: .75rem;
+
+  /* Stillos color system */
+  --accent: #ff2d85;        /* hot pink */
+  --accent-600: #e42273;    /* darker pink */
+  --danger: #c0392b;
+
+  --text-strong: #0f172a;
+  --muted: #6b7280;
+
+  --card-bg: #ffffff;
+  --ui-border: rgba(0,0,0,0.06);
+  --glass: rgba(255,255,255,0.06);
+}
+
+/* Ensure layout fits one viewport height without vertical scroll on mobile when possible */
+html,body,#app{
+  height:100%;
+  background:#ffffff;
+  color:var(--text-strong);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+#stepsCol, 
+#sideCol {
+  height: calc(100vh - 112px); /* header + footer */
+}
+
+/* Accordion / steps */
+#stepsContainer .accordion-button{
+  font-weight:600;
+  color:var(--text-strong);
+}
+
+.step-title{
+  font-size:0.95rem;
+  color:var(--text-strong);
+}
+
+/* Step bullet aligned with brand */
+.step-bullet{
+  width:28px;
+  height:28px;
+  border-radius:6px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(255,45,133,0.10);
+  color: var(--accent);
+  margin-right:.5rem;
+  font-weight:700;
+}
+
+/* Required marker */
+.list-group-item .required{
+  color: var(--danger);
+  font-weight:700;
+}
+
+/* Muted text */
+.small-muted{
+  color:var(--muted);
+}
+
+/* Touch-friendly controls */
+button,
+.form-check-input{
+  touch-action: manipulation;
+}
+
+/* Truncate long step content */
+.step-content{
+  max-height: calc(100vh - 300px);
+  overflow:auto;
+  padding-right:8px;
+}
+
+/* Notes / warnings styled to match Stillos */
+.note{
+  padding:.6rem .65rem;
+  border-left:4px solid var(--accent);
+  background: rgba(255,45,133,0.06);
+  border-radius:6px;
+  color:var(--text-strong);
+}
+
+/* Brand logo in header */
+.brand-logo{
+  height:36px;
+  width:auto;
+  display:inline-block;
+  margin-right:.5rem;
+  background:transparent;
+  border-radius:6px;
+  object-fit:contain;
+  border:1px solid var(--ui-border);
+}

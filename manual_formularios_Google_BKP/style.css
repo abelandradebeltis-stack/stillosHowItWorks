@@ -1,0 +1,237 @@
+:root{
+  /* Stillos design tokens */
+  --bg:#f7f8fa;
+  --card:#ffffff;
+
+  --accent:#ff2a84;
+  --accent-600:#e02174;
+  --accent-100:rgba(255,42,132,0.08);
+
+  --muted:#6b7280;
+  --text-strong:#0f172a;
+
+  --shadow:0 6px 18px rgba(17,25,40,0.06);
+  --ui-border:rgba(10,14,21,0.06);
+  --padding:16px;
+
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+  color-scheme:light;
+}
+
+*{box-sizing:border-box}
+html,body,#app{height:100%}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text-strong);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  font-size:15px;
+  line-height:1.4;
+}
+
+/* =========================
+   Brand
+========================= */
+.brand h3{color:var(--text-strong)}
+
+/* =========================
+   Layout / Topbar
+========================= */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px var(--padding);
+  background:#ffffff;
+  border-bottom:1px solid var(--ui-border);
+  box-shadow:0 2px 8px rgba(0,0,0,0.03);
+}
+
+.brand-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:56px;
+  height:56px;
+  object-fit:contain;
+  border-radius:8px;
+}
+
+.brand{
+  font-weight:700;
+  color:var(--text-strong);
+}
+
+/* =========================
+   Controls
+========================= */
+.controls{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.controls input[type="search"],
+.controls select,
+.controls button{
+  padding:8px 10px;
+  border-radius:8px;
+  border:1px solid var(--ui-border);
+  background:var(--bg);
+  color:#0b0b0b;
+}
+
+.controls button{
+  cursor:pointer;
+  font-weight:600;
+}
+
+.controls button:hover{
+  background:var(--accent-100);
+  border-color:var(--accent);
+}
+
+/* =========================
+   Content
+========================= */
+.content{
+  padding:20px;
+  max-width:780px;
+  margin:18px auto;
+  background:transparent;
+}
+
+/* =========================
+   Card
+========================= */
+.card{
+  background:var(--card);
+  border-radius:10px;
+  padding:18px;
+  box-shadow:var(--shadow);
+  margin-bottom:14px;
+  border:1px solid rgba(10,14,21,0.04);
+}
+
+.h1{
+  font-size:18px;
+  margin:0 0 8px 0;
+}
+
+.h2{
+  font-size:15px;
+  margin:12px 0 6px 0;
+  color:var(--accent);
+  font-weight:600;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* =========================
+   Sidebar / TOC
+========================= */
+.sidebar{
+  position:fixed;
+  right:14px;
+  top:74px;
+  width:200px;
+  max-height:70vh;
+  overflow:auto;
+  padding:10px;
+  display:none;
+}
+
+@media (min-width:980px){
+  .sidebar{display:block}
+}
+
+#toc{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+#toc li{
+  padding:6px 8px;
+  border-radius:8px;
+  margin-bottom:6px;
+  cursor:pointer;
+  font-size:13px;
+  color:var(--accent);
+  font-weight:500;
+}
+
+#toc li:hover{
+  background:var(--accent-100);
+}
+
+/* =========================
+   Helpers
+========================= */
+.kv{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.kv .k{
+  font-weight:600;
+  color:var(--muted);
+  min-width:120px;
+}
+
+.notice{
+  background:#fff7dd;
+  border:1px solid #ffecb5;
+  padding:10px;
+  border-radius:8px;
+  color:#7a5a00;
+  font-size:13px;
+}
+
+/* =========================
+   Collapsible sections
+========================= */
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.toggle-btn{
+  background:transparent;
+  border: 1px solid rgba(160, 48, 132, 0.589);
+  color:var(--accent);
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.toggle-btn:hover{
+  color:var(--accent-600);
+}
+
+/* =========================
+   Footer
+========================= */
+.footer{
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  left:14px;
+  font-size:12px;
+  color:var(--muted);
+}

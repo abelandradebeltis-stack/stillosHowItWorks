@@ -1,0 +1,225 @@
+
+:root {
+    --primary-color: #ff69b4;
+    --background-light: #f7f9fc;
+    --text-light: #9e2d98;
+    --card-background-light: #ffffff;
+    --border-light: #e0e7ef;
+
+    --background-dark: #5c6475cc;
+    --text-dark: #9e2d98;
+    --card-background-dark: #5c647593;
+    --border-dark: #4a5568b0;
+
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --font-family: 'Inter', sans-serif;
+   
+}
+
+
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-light);
+    color: var(--text-light);
+    margin: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-theme {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* --- Header --- */
+header {
+    background-color: var(--card-background-light);
+    border-bottom: 1px solid var(--border-light);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+body.dark-theme header {
+    background-color: rgba(45, 55, 72, 0.8);
+    border-bottom: 1px solid var(--border-dark);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo {
+    height: 40px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+#search-bar {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    background-color: var(--background-light);
+    color: var(--text-light);
+    font-family: var(--font-family);
+    width: 250px;
+    transition: all 0.3s ease;
+}
+
+#search-bar:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.2);
+}
+
+body.dark-theme #search-bar {
+    background-color: var(--background-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+#theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-light);
+    padding: 0;
+    line-height: 1;
+}
+
+body.dark-theme #theme-toggle {
+    color: var(--text-dark);
+}
+
+/* --- Main Content --- */
+main {
+    padding: 48px 0;
+}
+
+#apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.app-card {
+    background-color: var(--card-background-light);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+body.dark-theme .app-card {
+    background-color: var(--card-background-dark);
+    border-color: var(--border-dark);
+}
+
+.app-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.app-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.app-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border-light);
+}
+
+body.dark-theme .app-card img {
+    border-bottom-color: var(--border-dark);
+}
+
+.app-card-content {
+    padding: 24px;
+    flex-grow: 1;
+}
+
+.app-card-content h3 {
+    margin: 0 0 8px;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.app-card-content p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #6c757d;
+}
+
+body.dark-theme .app-card-content p {
+    color: #a0aec0;
+}
+
+/* --- Footer --- */
+footer {
+    background-color: var(--card-background-light);
+    border-top: 1px solid var(--border-light);
+    text-align: center;
+    padding: 24px 0;
+    margin-top: 48px;
+}
+
+body.dark-theme footer {
+    background-color: var(--card-background-dark);
+    border-top-color: var(--border-dark);
+}
+
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.25rem;
+    }
+
+    header .container {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    #search-bar {
+        width: 100%;
+    }
+}
