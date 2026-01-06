@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Portal de Manuais Stillos</title>
+    <link rel="icon" href="stillos-logo.png" type="image/png">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-container">
+        <img src="stillos-logo.png" alt="STILLOS logo" class="logo">
+        <h2>Portal de Manuais</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" required>
+                    <span id="toggle-password" class="toggle-password">👁️</span>
+                </div>
+            </div>
+            <button type="submit">Entrar</button>
+            <p id="error-message" style="color: red;"></p>
+        </form>
+    </div>
+    <script src="login.js"></script>
+</body>
+</html>

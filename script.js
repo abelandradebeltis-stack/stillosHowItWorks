@@ -1,4 +1,8 @@
 
+function exitApp() {
+    window.location.href = '/logout';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const appsGrid = document.getElementById('apps-grid');
     const searchBar = document.getElementById('search-bar');
