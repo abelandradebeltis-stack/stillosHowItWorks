@@ -207,6 +207,13 @@ body.dark-theme footer {
     border-top-color: var(--border-dark);
 }
 
+.loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
 
 /* --- Responsive --- */
 @media (max-width: 768px) {

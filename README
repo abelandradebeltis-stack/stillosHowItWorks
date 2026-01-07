@@ -1,0 +1,8 @@
+Os manuais são adicionados no backend/app.py
+
+No ambiente de teste não irá funcionar os cards por conta das configurações necessárias
+para separar frontend (Vercel) de backend (OnRender).
+
+Sempre que criar um novo manual → alterar backend
+
+Deploy no Render a cada ajuste
