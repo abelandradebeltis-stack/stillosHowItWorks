@@ -8,16 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loginButton = document.getElementById('login-button');
     const loginText = document.getElementById('login-text');
+    const loginLoading = document.getElementById('login-loading');
 
-    const loadingContainer = document.getElementById('login-loading-container');
-    const loadingText = document.getElementById('login-loading-text');
-    const progressFill = document.getElementById('progress-fill');
-
-    let progress = 0;
     let progressInterval = null;
-    let loadingTimeout = null;
+    let maxLoadingTimeout = null;
 
-    /* 👁️ MOSTRAR / OCULTAR SENHA */
+    // 👁️ Mostrar / ocultar senha
     togglePassword.addEventListener('click', () => {
         const isPassword = passwordInput.type === 'password';
         passwordInput.type = isPassword ? 'text' : 'password';
@@ -29,60 +25,37 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessage.style.display = 'block';
     };
 
-    /* 🔄 INICIA LOADING */
     const startLoading = () => {
         loginButton.disabled = true;
         loginText.style.display = 'none';
+        loginLoading.style.display = 'inline';
         errorMessage.style.display = 'none';
 
-        loadingContainer.classList.remove('hidden');
-
-        progress = 1;
-        progressFill.style.width = '1%';
-        loadingText.textContent = 'Conectando ao servidor...';
-
-        progressInterval = setInterval(() => {
-            if (progress < 95) {
-                progress += Math.random() * 4 + 1;
-                progressFill.style.width = `${progress}%`;
-            }
-        }, 300);
-
-        // ⏳ Feedback se demorar
-        loadingTimeout = setTimeout(() => {
-            loadingText.textContent = 'Servidor acordando, aguarde...';
-        }, 3000);
+        // ⛔ GARANTIA: loading nunca passa de 20s
+        maxLoadingTimeout = setTimeout(() => {
+            stopLoading();
+            showError('Servidor indisponível no momento. Tente novamente.');
+        }, 20000);
     };
 
-    /* ✅ FINALIZA LOADING */
-    const finishLoading = () => {
-        clearInterval(progressInterval);
-        clearTimeout(loadingTimeout);
-
-        progressFill.style.width = '100%';
-        loadingText.textContent = 'Autenticado com sucesso!';
-    };
-
-    /* ❌ ERRO */
     const stopLoading = () => {
+        clearTimeout(maxLoadingTimeout);
         clearInterval(progressInterval);
-        clearTimeout(loadingTimeout);
 
         loginButton.disabled = false;
         loginText.style.display = 'inline';
-
-        loadingContainer.classList.add('hidden');
-        progressFill.style.width = '0%';
+        loginLoading.style.display = 'none';
     };
 
-    /* 🚀 SUBMIT */
     loginForm.addEventListener('submit', async e => {
         e.preventDefault();
+        startLoading();
 
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
 
-        startLoading();
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
 
         try {
             const API_BASE_URL = 'https://stilloshowitworks.onrender.com';
@@ -90,29 +63,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username, password }),
+                signal: controller.signal
             });
 
-            loadingText.textContent = 'Validando credenciais...';
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                throw new Error('Credenciais inválidas');
+            }
 
             const result = await response.json();
 
-            if (response.ok && result.token) {
-                finishLoading();
-                localStorage.setItem('token', result.token);
-
-                setTimeout(() => {
-                    window.location.href = '/';
-                }, 700);
-            } else {
-                stopLoading();
-                showError(result.message || 'Usuário ou senha inválidos.');
+            if (!result.token) {
+                throw new Error('Token não recebido');
             }
+
+            localStorage.setItem('token', result.token);
+
+            // ✅ SUCESSO GARANTIDO
+            window.location.href = '/';
 
         } catch (err) {
             console.error(err);
             stopLoading();
-            showError('Erro de rede. Tente novamente.');
+
+            if (err.name === 'AbortError') {
+                showError('Tempo de resposta excedido. Tente novamente.');
+            } else {
+                showError(err.message || 'Erro ao autenticar.');
+            }
         }
     });
 });
