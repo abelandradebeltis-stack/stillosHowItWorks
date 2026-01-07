@@ -1,0 +1,14 @@
+2026-01-07 12:40:33 - --- Tentativa de Login Recebida ---
+2026-01-07 12:40:33 - Dados brutos recebidos: {'username': 'administrator', 'password': 'admin'}
+2026-01-07 12:40:33 - Username processado: 'administrator'
+2026-01-07 12:40:33 - Password processado: (senha não será registrada por segurança)
+2026-01-07 12:40:33 - Verificando Username: 'administrator' == 'administrator' -> True
+2026-01-07 12:40:33 - Verificando Password: (verificação de senha) -> True
+2026-01-07 12:40:33 - [SUCESSO] Credenciais correspondem. Gerando token.
+2026-01-07 12:40:53 - --- Tentativa de Login Recebida ---
+2026-01-07 12:40:53 - Dados brutos recebidos: {'username': 'administrator', 'password': 'admin'}
+2026-01-07 12:40:53 - Username processado: 'administrator'
+2026-01-07 12:40:53 - Password processado: (senha não será registrada por segurança)
+2026-01-07 12:40:53 - Verificando Username: 'administrator' == 'administrator' -> True
+2026-01-07 12:40:53 - Verificando Password: (verificação de senha) -> True
+2026-01-07 12:40:53 - [SUCESSO] Credenciais correspondem. Gerando token.

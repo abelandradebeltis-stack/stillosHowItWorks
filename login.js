@@ -1,56 +1,50 @@
-
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Verificação de Autenticação Existente ---
-    fetch('/check-auth')
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'authenticated') {
-                window.location.href = '/';
-            }
-        })
-        .catch(error => console.error('Erro ao verificar autenticação:', error));
-
-    // --- Lógica do Formulário de Login ---
     const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('error-message');
-
-            fetch('/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    window.location.href = '/';
-                } else {
-                    errorMessage.textContent = data.message || 'Erro ao fazer login. Tente novamente.';
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao fazer login:', error);
-                errorMessage.textContent = 'Ocorreu um erro inesperado. Verifique o console para mais detalhes.';
-            });
-        });
-    }
-
-    // --- Lógica para Alternar a Visibilidade da Senha ---
-    const togglePassword = document.getElementById('toggle-password');
+    const errorMessage = document.getElementById('error-message');
     const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('toggle-password');
 
-    if (togglePassword && passwordInput) {
-        togglePassword.addEventListener('click', () => {
-            // Alterna o tipo do campo de senha
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
+    // 👁️ Mostrar / ocultar senha
+    togglePassword.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        togglePassword.textContent = isPassword ? '🙈' : '👁️';
+    });
 
-            // Alterna o ícone do olho
-            togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
-        });
-    }
+    const showError = (message) => {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+    };
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorMessage.style.display = 'none';
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.token) {
+                // 🔐 PADRÃO ÚNICO DE TOKEN
+                localStorage.setItem('token', result.token);
+                window.location.href = '/';
+            } else {
+                showError(result.message || 'Usuário ou senha inválidos.');
+            }
+
+        } catch (error) {
+            console.error('Erro na requisição de login:', error);
+            showError('Erro de rede. Tente novamente.');
+        }
+    });
 });

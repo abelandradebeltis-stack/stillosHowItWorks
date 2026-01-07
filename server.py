@@ -1,73 +1,76 @@
-
 import os
-from flask import Flask, request, jsonify, session, redirect, url_for, send_from_directory
+import jwt
+import datetime
+from functools import wraps
+from flask import Flask, request, jsonify, send_from_directory
 
 app = Flask(__name__)
 
-# Configure a chave secreta a partir de variáveis de ambiente para segurança
-app.secret_key = os.environ.get('SECRET_KEY', 'default-secret-key')
+# --- Configuração ---
+app.config['SECRET_KEY'] = 'uma-chave-secreta-de-fallback-confiavel'
+ADMIN_USERNAME = 'administrator'
+ADMIN_PASSWORD = 'admin'
 
-# Carregue as credenciais do administrador a partir de variáveis de ambiente
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
+# --- Decorator JWT ---
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
 
-# Rota de Login
+        if 'Authorization' in request.headers:
+            parts = request.headers['Authorization'].split(" ")
+            if len(parts) == 2:
+                token = parts[1]
+
+        if not token:
+            return jsonify({'message': 'Token está faltando!'}), 401
+
+        try:
+            jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+            return jsonify({'message': 'Token inválido ou expirado!'}), 401
+
+        return f(*args, **kwargs)
+    return decorated
+
+# --- Login ---
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
+    username = data.get('username', '').strip()
+    password = data.get('password', '').strip()
 
-    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
-        session['logged_in'] = True
-        return jsonify({'status': 'success'})
-    else:
-        return jsonify({'status': 'error', 'message': 'Credenciais inválidas'}), 401
+    if username.lower() == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        token = jwt.encode({
+            'user': username,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+        }, app.config['SECRET_KEY'], algorithm="HS256")
 
-# Rota de Logout
-@app.route('/logout')
-def logout():
-    session.pop('logged_in', None)
-    return redirect(url_for('serve_login_page'))
+        return jsonify({'token': token})
 
-# Rota para verificar o status da autenticação
-@app.route('/check-auth')
-def check_auth():
-    if session.get('logged_in'):
-        return jsonify({'status': 'authenticated'})
-    else:
-        return jsonify({'status': 'unauthenticated'}), 401
+    return jsonify({'message': 'Credenciais inválidas'}), 401
 
-# Rota principal que serve a página de login ou o portal principal
+# --- API protegida ---
+@app.route('/api/apps')
+@token_required
+def get_apps():
+    return send_from_directory('.', 'apps.json')
+
+# --- Frontend ---
 @app.route('/')
-def serve_portal():
-    if not session.get('logged_in'):
-        return redirect(url_for('serve_login_page'))
+def serve_index():
     return send_from_directory('.', 'index.html')
 
-# Rota para a página de login
 @app.route('/login.html')
-def serve_login_page():
+def serve_login():
     return send_from_directory('.', 'login.html')
 
-# --- ROTA ATUALIZADA PARA SERVIR ARQUIVOS ESTÁTICOS ---
 @app.route('/<path:path>')
-def serve_static_files(path):
-    # Arquivos públicos para a página de login que não exigem autenticação
-    public_files = ['login.js', 'login.css', 'stillos-logo.png']
-    if path in public_files:
+def serve_static(path):
+    if os.path.isfile(path):
         return send_from_directory('.', path)
-
-    # Se o usuário não estiver logado, redirecione para a página de login
-    if not session.get('logged_in'):
-        return redirect(url_for('serve_login_page'))
-
-    # Após o login, sirva com segurança qualquer arquivo solicitado do diretório raiz.
-    # Isso inclui `script.js`, `style.css`, `apps.json` e todos os outros recursos.
-    return send_from_directory('.', path)
-
+    return jsonify({'message': 'Arquivo não encontrado'}), 404
 
 if __name__ == '__main__':
-    host = os.environ.get('HOST', '0.0.0.0')
     port = int(os.environ.get('PORT', 8080))
-    app.run(host=host, port=port)
+    app.run(host='0.0.0.0', port=port)
