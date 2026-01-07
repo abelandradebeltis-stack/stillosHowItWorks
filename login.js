@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 🧹 Limpa token antigo
+    // 🧹 Limpa token antigo ao abrir a tela de login
     localStorage.removeItem('token');
 
     const loginForm = document.getElementById('login-form');
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessage.style.display = 'none';
 
         const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
+        const password = passwordInput.value.trim();
 
         try {
             const API_BASE_URL = 'https://stilloshowitworks.onrender.com';
@@ -36,13 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({ username, password })
             });
-            
 
             const result = await response.json();
 
             if (response.ok && result.token) {
                 localStorage.setItem('token', result.token);
-                window.location.href = '/';
+
+                // ✅ redirecionamento seguro
+                window.location.href = '/index.html';
             } else {
                 showError(result.message || 'Usuário ou senha inválidos.');
             }

@@ -19,8 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 🔒 Bloqueio de acesso
     if (!token || isTokenExpired(token)) {
-        localStorage.removeItem('token');
-        window.location.href = '/login.html';
+        exitApp();
         return;
     }
 
@@ -30,8 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let allApps = [];
 
+    // ✅ URL CORRETA DO BACKEND
+    const API_BASE_URL = 'https://stilloshowitworks.onrender.com';
+
     // 🔄 Apps protegidos
-    fetch('/api/apps', {
+    fetch(`${API_BASE_URL}/api/apps`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -39,7 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => {
             if (response.status === 401) {
                 exitApp();
-                return;
+                return null;
+            }
+            if (!response.ok) {
+                throw new Error('Erro ao buscar apps');
             }
             return response.json();
         })
@@ -47,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!data) return;
             allApps = data;
             displayApps(allApps);
+        })
+        .catch(err => {
+            console.error('Erro ao carregar apps:', err);
+            exitApp();
         });
 
     function displayApps(apps) {
