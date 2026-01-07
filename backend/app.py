@@ -12,13 +12,16 @@ app.config['SECRET_KEY'] = os.environ.get(
     'SECRET_KEY', 'fallback-local'
 )
 
+# 🌐 URL DO FRONTEND (VERCEL)
+FRONTEND_BASE_URL = "https://stillos-how-it-works.vercel.app"
+
 # 🔓 CORS — permite frontend do Vercel e ambiente local
 CORS(
     app,
     resources={
         r"/*": {
             "origins": [
-                "https://stillos-how-it-works.vercel.app",
+                FRONTEND_BASE_URL,
                 "http://localhost:3000",
                 "http://localhost:5173"
             ]
@@ -80,7 +83,7 @@ def login():
     return jsonify({'message': 'Credenciais inválidas'}), 401
 
 
-# ---------------- CATÁLOGO CENTRAL DE APPS ----------------
+# ---------------- CATÁLOGO CENTRAL (RELATIVO) ----------------
 APPS_CATALOG = [
     {
         "title": "Dashboard de Chamados GLPI",
@@ -142,7 +145,16 @@ APPS_CATALOG = [
 @app.route('/api/apps', methods=['GET'])
 @token_required
 def apps():
-    return jsonify(APPS_CATALOG)
+    apps_with_absolute_urls = []
+
+    for app_item in APPS_CATALOG:
+        apps_with_absolute_urls.append({
+            **app_item,
+            "link": f"{FRONTEND_BASE_URL}/{app_item['link']}",
+            "image": f"{FRONTEND_BASE_URL}/{app_item['image']}"
+        })
+
+    return jsonify(apps_with_absolute_urls)
 
 
 # ---------------- HEALTH CHECK ----------------
