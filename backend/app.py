@@ -16,12 +16,13 @@ app.config['SECRET_KEY'] = os.environ.get(
 CORS(
     app,
     resources={r"/*": {"origins": [
-            "http://localhost:3000",
-            "http://localhost:5173",
-            "https://stillos-how-it-works.vercel.app/login.html"
-        ]}},
+        "https://stillos-how-it-works.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:5173"
+    ]}},
     supports_credentials=True
 )
+
 
 ADMIN_USERNAME = 'administrator'
 ADMIN_PASSWORD = 'still0S@2026Sys!!'
