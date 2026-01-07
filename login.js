@@ -13,8 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingText = document.getElementById('login-loading-text');
     const progressFill = document.getElementById('progress-fill');
 
-    let progressInterval = null;
     let progress = 0;
+    let progressInterval = null;
+    let loadingTimeout = null;
 
     /* 👁️ MOSTRAR / OCULTAR SENHA */
     togglePassword.addEventListener('click', () => {
@@ -23,38 +24,50 @@ document.addEventListener('DOMContentLoaded', () => {
         togglePassword.textContent = isPassword ? '🙈' : '👁️';
     });
 
-    /* ❌ ERRO */
     const showError = message => {
         errorMessage.textContent = message;
         errorMessage.style.display = 'block';
     };
 
-    /* 🔄 LOADING */
+    /* 🔄 INICIA LOADING */
     const startLoading = () => {
         loginButton.disabled = true;
         loginText.style.display = 'none';
+        errorMessage.style.display = 'none';
 
         loadingContainer.classList.remove('hidden');
-        progress = 5;
-        progressFill.style.width = '5%';
+
+        progress = 1;
+        progressFill.style.width = '1%';
         loadingText.textContent = 'Conectando ao servidor...';
 
         progressInterval = setInterval(() => {
-            if (progress < 85) {
-                progress += Math.random() * 6;
+            if (progress < 95) {
+                progress += Math.random() * 4 + 1;
                 progressFill.style.width = `${progress}%`;
             }
-        }, 400);
+        }, 300);
+
+        // ⏳ Feedback se demorar
+        loadingTimeout = setTimeout(() => {
+            loadingText.textContent = 'Servidor acordando, aguarde...';
+        }, 3000);
     };
 
+    /* ✅ FINALIZA LOADING */
     const finishLoading = () => {
         clearInterval(progressInterval);
+        clearTimeout(loadingTimeout);
+
         progressFill.style.width = '100%';
         loadingText.textContent = 'Autenticado com sucesso!';
     };
 
+    /* ❌ ERRO */
     const stopLoading = () => {
         clearInterval(progressInterval);
+        clearTimeout(loadingTimeout);
+
         loginButton.disabled = false;
         loginText.style.display = 'inline';
 
@@ -65,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
     /* 🚀 SUBMIT */
     loginForm.addEventListener('submit', async e => {
         e.preventDefault();
-        errorMessage.style.display = 'none';
 
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
@@ -75,15 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const API_BASE_URL = 'https://stilloshowitworks.onrender.com';
 
-            loadingText.textContent = 'Validando credenciais...';
-
             const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             });
 
-            loadingText.textContent = 'Processando resposta...';
+            loadingText.textContent = 'Validando credenciais...';
 
             const result = await response.json();
 
@@ -93,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 setTimeout(() => {
                     window.location.href = '/';
-                }, 600);
+                }, 700);
             } else {
                 stopLoading();
                 showError(result.message || 'Usuário ou senha inválidos.');
