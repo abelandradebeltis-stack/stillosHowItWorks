@@ -15,7 +15,11 @@ app.config['SECRET_KEY'] = os.environ.get(
 # 🔓 CORS — permite o frontend do Vercel
 CORS(
     app,
-    resources={r"/*": {"origins": "*"}},
+    resources={r"/*": {"origins": [
+            "http://localhost:3000",
+            "http://localhost:5173",
+            "https://stillos-how-it-works.vercel.app/login.html"
+        ]}},
     supports_credentials=True
 )
 
