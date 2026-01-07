@@ -14,70 +14,63 @@ function exitApp() {
     window.location.href = '/login.html';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
 
-    // 🔒 Bloqueio de acesso
     if (!token || isTokenExpired(token)) {
         exitApp();
         return;
     }
 
     const appsGrid = document.getElementById('apps-grid');
-    const loading = document.getElementById('loading-apps');
-    const searchBar = document.getElementById('search-bar');
-    const themeToggle = document.getElementById('theme-toggle');
 
-    let allApps = [];
+    if (!appsGrid) {
+        console.error('Elemento #apps-grid não encontrado no HTML');
+        return;
+    }
 
+    // 🔗 Backend correto
     const API_BASE_URL = 'https://stilloshowitworks.onrender.com';
 
-    // 🔄 Apps protegidos
-    fetch(`${API_BASE_URL}/api/apps`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-        .then(response => {
-            if (response.status === 401) {
-                exitApp();
-                return null;
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/apps`, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-            if (!response.ok) {
-                throw new Error('Erro ao buscar apps');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (!data) return;
-
-            allApps = data;
-
-            // ✅ UX: mostra conteúdo apenas quando pronto
-            loading.style.display = 'none';
-            appsGrid.style.display = 'grid';
-
-            displayApps(allApps);
-        })
-        .catch(err => {
-            console.error('Erro ao carregar apps:', err);
-
-            loading.textContent =
-                '❌ Não foi possível carregar as documentações. Tente recarregar a página.';
         });
 
-    function displayApps(apps) {
+        if (response.status === 401) {
+            exitApp();
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Erro ao buscar apps');
+        }
+
+        const apps = await response.json();
+
+        console.log('Apps recebidos do backend:', apps);
+
+        renderApps(apps);
+
+    } catch (err) {
+        console.error('Erro ao carregar catálogo:', err);
+        exitApp();
+    }
+
+    function renderApps(apps) {
         appsGrid.innerHTML = '';
 
-        if (apps.length === 0) {
-            appsGrid.innerHTML =
-                '<p style="text-align:center; opacity:.7;">Nenhuma documentação encontrada.</p>';
+        if (!apps.length) {
+            appsGrid.innerHTML = '<p>Nenhuma documentação disponível.</p>';
             return;
         }
 
         apps.forEach(app => {
             const card = document.createElement('div');
             card.className = 'app-card';
+
             card.innerHTML = `
                 <a href="${app.link}" class="app-link">
                     <img src="${app.image}" alt="${app.title}">
@@ -87,31 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </a>
             `;
+
             appsGrid.appendChild(card);
         });
-    }
-
-    // 🔍 Pesquisa
-    searchBar.addEventListener('input', e => {
-        const term = e.target.value.toLowerCase();
-        displayApps(
-            allApps.filter(app =>
-                app.title.toLowerCase().includes(term) ||
-                app.description.toLowerCase().includes(term)
-            )
-        );
-    });
-
-    // 🌙 Tema
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-        localStorage.setItem(
-            'theme',
-            document.body.classList.contains('dark-theme') ? 'dark' : 'light'
-        );
-    });
-
-    if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-theme');
     }
 });
