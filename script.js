@@ -1,7 +1,25 @@
-// 🔐 Verificação de autenticação ao carregar a página
+// 🔐 Verifica se o token JWT expirou
+function isTokenExpired(token) {
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.exp * 1000 < Date.now();
+    } catch {
+        return true;
+    }
+}
+
+// 🚪 Logout
+function exitApp() {
+    localStorage.removeItem('token');
+    window.location.href = '/login.html';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
-    if (!token) {
+
+    // 🔒 Bloqueio de acesso
+    if (!token || isTokenExpired(token)) {
+        localStorage.removeItem('token');
         window.location.href = '/login.html';
         return;
     }
@@ -12,16 +30,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let allApps = [];
 
-    // 🔄 Carregar apps protegidos pela API
+    // 🔄 Apps protegidos
     fetch('/api/apps', {
         headers: {
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`
         }
     })
         .then(response => {
             if (response.status === 401) {
-                localStorage.removeItem('token');
-                window.location.href = '/login.html';
+                exitApp();
                 return;
             }
             return response.json();
@@ -51,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 🔍 Pesquisa
-    searchBar.addEventListener('input', (e) => {
+    searchBar.addEventListener('input', e => {
         const term = e.target.value.toLowerCase();
         displayApps(
             allApps.filter(app =>
@@ -74,9 +91,3 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('dark-theme');
     }
 });
-
-// 🚪 Logout correto (JWT)
-function exitApp() {
-    localStorage.removeItem('token');
-    window.location.href = '/login.html';
-}

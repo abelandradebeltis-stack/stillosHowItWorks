@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 🧹 Limpa token antigo
+    localStorage.removeItem('token');
+
     const loginForm = document.getElementById('login-form');
     const errorMessage = document.getElementById('error-message');
     const passwordInput = document.getElementById('password');
@@ -11,12 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
         togglePassword.textContent = isPassword ? '🙈' : '👁️';
     });
 
-    const showError = (message) => {
+    const showError = message => {
         errorMessage.textContent = message;
         errorMessage.style.display = 'block';
     };
 
-    loginForm.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', async e => {
         e.preventDefault();
         errorMessage.style.display = 'none';
 
@@ -26,24 +29,21 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             });
 
             const result = await response.json();
 
             if (response.ok && result.token) {
-                // 🔐 PADRÃO ÚNICO DE TOKEN
                 localStorage.setItem('token', result.token);
                 window.location.href = '/';
             } else {
                 showError(result.message || 'Usuário ou senha inválidos.');
             }
 
-        } catch (error) {
-            console.error('Erro na requisição de login:', error);
+        } catch (err) {
+            console.error(err);
             showError('Erro de rede. Tente novamente.');
         }
     });
