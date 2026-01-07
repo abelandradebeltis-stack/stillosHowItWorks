@@ -24,12 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const appsGrid = document.getElementById('apps-grid');
+    const loading = document.getElementById('loading-apps');
     const searchBar = document.getElementById('search-bar');
     const themeToggle = document.getElementById('theme-toggle');
 
     let allApps = [];
 
-    // ✅ URL CORRETA DO BACKEND
     const API_BASE_URL = 'https://stilloshowitworks.onrender.com';
 
     // 🔄 Apps protegidos
@@ -50,16 +50,31 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             if (!data) return;
+
             allApps = data;
+
+            // ✅ UX: mostra conteúdo apenas quando pronto
+            loading.style.display = 'none';
+            appsGrid.style.display = 'grid';
+
             displayApps(allApps);
         })
         .catch(err => {
             console.error('Erro ao carregar apps:', err);
-            exitApp();
+
+            loading.textContent =
+                '❌ Não foi possível carregar as documentações. Tente recarregar a página.';
         });
 
     function displayApps(apps) {
         appsGrid.innerHTML = '';
+
+        if (apps.length === 0) {
+            appsGrid.innerHTML =
+                '<p style="text-align:center; opacity:.7;">Nenhuma documentação encontrada.</p>';
+            return;
+        }
+
         apps.forEach(app => {
             const card = document.createElement('div');
             card.className = 'app-card';
