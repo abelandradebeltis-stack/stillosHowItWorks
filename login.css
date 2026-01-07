@@ -1,4 +1,4 @@
-
+/* 🌐 RESET / BASE */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -9,6 +9,7 @@ body {
     margin: 0;
 }
 
+/* 📦 CONTAINER */
 .login-container {
     background-color: #fff;
     padding: 40px;
@@ -18,16 +19,19 @@ body {
     width: 350px;
 }
 
+/* 🖼️ LOGO */
 .logo {
     width: 150px;
     margin-bottom: 20px;
 }
 
+/* 🏷️ TÍTULO */
 h2 {
     margin-bottom: 20px;
     color: #333;
 }
 
+/* 📝 FORM */
 .form-group {
     margin-bottom: 15px;
     text-align: left;
@@ -47,6 +51,7 @@ h2 {
     box-sizing: border-box;
 }
 
+/* 👁️ SENHA */
 .password-wrapper {
     position: relative;
     display: flex;
@@ -54,7 +59,7 @@ h2 {
 }
 
 .password-wrapper input {
-    padding-right: 40px; /* Make space for the icon */
+    padding-right: 40px;
 }
 
 .toggle-password {
@@ -65,6 +70,7 @@ h2 {
     font-size: 20px;
 }
 
+/* 🔘 BOTÃO */
 button {
     width: 100%;
     padding: 12px;
@@ -74,13 +80,56 @@ button {
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, opacity 0.3s;
 }
 
 button:hover {
     background-color: #0056b3;
 }
 
-#error-message {
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ❌ ERRO */
+.error-message {
     margin-top: 15px;
+    color: #d9534f;
+    display: none;
+}
+
+/* 🔄 UTIL */
+.hidden {
+    display: none;
+}
+
+/* ⏳ LOADING CONTAINER */
+#login-loading-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* 📝 TEXTO DO LOADING */
+#login-loading-text {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* 📊 BARRA DE PROGRESSO */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* 🔵 PREENCHIMENTO */
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background-color: #007bff;
+    transition: width 0.4s ease;
 }

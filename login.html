@@ -8,11 +8,13 @@
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
+
     <div class="login-container">
         <img src="stillos-logo.png" alt="STILLOS logo" class="logo">
         <h2>Portal de Manuais</h2>
 
         <form id="login-form">
+
             <div class="form-group">
                 <label for="username">Usuário</label>
                 <input type="text" id="username" name="username" required>
@@ -26,12 +28,26 @@
                 </div>
             </div>
 
+            <!-- 🔄 BOTÃO COM ESTADOS -->
             <button type="submit" id="login-button">
                 <span id="login-text">Entrar</span>
-                <span id="login-loading" style="display:none;">⏳ Entrando...</span>
+                <span id="login-loading" class="hidden">Autenticando...</span>
             </button>
-            
-            <p id="error-message" style="color:red; display:none;"></p>
+
+            <!-- 📊 LOADING PROGRESSIVO -->
+            <div id="login-loading-container" class="hidden">
+                <div id="login-loading-text">
+                    Conectando ao servidor...
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="login-progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- ❌ ERRO -->
+            <p id="error-message" class="error-message"></p>
+
         </form>
     </div>
 
